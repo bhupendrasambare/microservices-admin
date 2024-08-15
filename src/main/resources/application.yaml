@@ -1,0 +1,30 @@
+server:
+  port: 8762
+spring:
+  application:
+    name: admin-server
+
+custom:
+  server-ip: localhost
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://${custom.server-ip}:8761/eureka/
+  instance:
+    hostname: ${custom.server-ip}
+    prefer-ip-address: true
+    ip-address: ${custom.server-ip}
+
+#spring:
+#  cloud:
+#    compatibility-verifier:
+#      enabled: false
