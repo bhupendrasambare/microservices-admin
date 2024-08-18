@@ -2,31 +2,30 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "bhupendra1404/microservice:ms-registry"
-        CONTAINER_NAME = "ms-registry"
+        DOCKER_IMAGE = "bhupendra1404/microservice:ms-admin"
+        CONTAINER_NAME = "ms-admin"
         DOCKER_PATH = '/usr/local/bin/docker'
         MAVEN_PATH = '/opt/homebrew/Cellar/maven/3.9.5/libexec/bin/mvn'
+        CUSTOM_SERVER_IP = '192.168.29.226'
     }
 
     stages {
 
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'git@github.com:bhupendrasambare/microservices-registry.git'
+                git branch: 'main', url: 'https://github.com/bhupendrasambare/microservices-admin.git'
             }
         }
 
         stage('Build JAR') {
             steps {
-                sh "${MAVEN_PATH} clean package -DskipTests"
+                sh "${MAVEN_PATH} clean package -DskipTests -Dcustom.server-ip=192.168.29.226"
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh "ls"
-                    // Build the Docker image, disable image pulling
                     sh "${DOCKER_PATH} build --pull=false --progress=plain -t ${DOCKER_IMAGE} ."
                 }
             }
@@ -35,7 +34,6 @@ pipeline {
         stage('Deploy Docker Image') {
             steps {
                 script {
-                    // Stop and remove the existing container if it exists
                     sh """
                     if [ \$(${DOCKER_PATH} ps -a -q -f name=${CONTAINER_NAME}) ]; then
                         ${DOCKER_PATH} stop ${CONTAINER_NAME}
@@ -43,10 +41,18 @@ pipeline {
                     fi
                     """
 
-                    // Run the new container
                     sh """
-                    ${DOCKER_PATH} run -i -p 8761:8761 -d --name ${CONTAINER_NAME} ${DOCKER_IMAGE}
+                    ${DOCKER_PATH} run -i -p 8762:8762 -d --name ${CONTAINER_NAME} -e CUSTOM_SERVER_IP=${CUSTOM_SERVER_IP} ${DOCKER_IMAGE}
                     """
+                }
+            }
+        }
+
+        stage('Clean Up Docker Images') {
+            steps {
+                script {
+                    // Remove all dangling images
+                    sh "${DOCKER_PATH} image prune -f"
                 }
             }
         }
