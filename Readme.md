@@ -1,19 +1,21 @@
-# Microservices Registry
+# Microservices Admin Pannel
 
-![Microservices Architecture](./images/screenshoot.png)
+![Microservices Admin Dashboard](./images/screenshoot.png)
 
-This project provides a registry for managing microservices. It is built using Java Spring Boot 3 and includes configurations for Docker and Jenkins.
+This project prove a admin panel for all the instance connected to it showing there work load, memory, connections and service status. It also shows the services performance. ALl this is done through the dependency of Spring Boot Admin and Actuator support.
 
 ## Features
 
-- **Service Registration and Discovery:** Microservices can register themselves and discover other services.
-- **Health Checks:** Integrated health checks to ensure the services are up and running.
-- **Configuration Management:** Centralized configuration management for microservices.
+- **Service Admin Panel:** Microservices can register themselves and can allow the admin panel to monitor there health and memory status.
+- **Health Checks:** Health check is showing using proper graph and statistics using Spring boot Actuator.
+- **Downtime and Monitoring:** Check the service status and services up and downtime.
 
 ## Technologies Used
 
 - Java
 - Spring Boot
+- Spring boot Admin
+- Spring boot Actuator
 - Docker
 - Jenkins
 
@@ -30,8 +32,8 @@ This project provides a registry for managing microservices. It is built using J
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/bhupendrasambare/microservices-registry.git
-    cd microservices-registry
+    git clone https://github.com/bhupendrasambare/microservices-admin.git
+    cd microservices-admin
     ```
 
 2. Build the project using Maven:
@@ -41,19 +43,19 @@ This project provides a registry for managing microservices. It is built using J
 
 3. Run the application:
     ```bash
-    java -jar target/microservices-registry-0.0.1-SNAPSHOT.jar
+    java -jar target/microservices-admin-0.0.1-SNAPSHOT.jar
     ```
 
 ### Running with Docker
 
 1. Build the Docker image:
     ```bash
-    docker build -t microservices-registry .
+    docker build -t microservices-admin .
     ```
 
 2. Run the Docker container:
     ```bash
-    docker run -d -p 8761:8761 microservices-registry
+    docker run -d -p 8762:8762 microservices-admin
     ```
 
 ### Jenkins Integration
