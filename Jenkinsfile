@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        JAVA_HOME = "/Users/bhupendrasam1404/Library/Java/JavaVirtualMachines/jdk-22.0.1.jdk/Contents/Home"
         DOCKER_IMAGE = "bhupendra1404/microservice:ms-admin"
         CONTAINER_NAME = "ms-admin"
         DOCKER_PATH = '/usr/local/bin/docker'
@@ -26,7 +27,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh "${DOCKER_PATH} build --pull=false --progress=plain -t ${DOCKER_IMAGE} ."
+                    // Build the Docker image using the standard build command
+                    sh "${DOCKER_PATH} build --no-cache -t ${DOCKER_IMAGE} ."
                 }
             }
         }
