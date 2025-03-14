@@ -23,7 +23,7 @@ This project prove a admin panel for all the instance connected to it showing th
 
 ### Prerequisites
 
-- **Java 17**
+- **Java 22**
 - **Docker**
 - **Maven>=3.8**
 - **PORT :** 8761
