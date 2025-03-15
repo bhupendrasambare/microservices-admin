@@ -1,14 +1,33 @@
-# Start with a base image containing Java runtime
-FROM openjdk:21-jdk-slim
+# ---- Stage 1: Build the application ----
+FROM openjdk:21-jdk-slim AS builder
 
-# Set the working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Copy the packaged JAR file into the container at /app
-COPY target/*.jar app.jar
+# Copy Maven-related files first to leverage Docker caching
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
 
-# Expose the port that the application listens to
+# Download dependencies before copying the source code
+RUN ./mvnw dependency:go-offline
+
+# Copy the source code
+COPY src/ src/
+
+# Build the JAR file
+RUN ./mvnw clean package -DskipTests
+
+# ---- Stage 2: Create a minimal runtime image ----
+FROM openjdk:21-jdk-slim
+
+# Set working directory inside the container
+WORKDIR /app
+
+# Copy the built JAR from the builder stage
+COPY --from=builder /app/target/*.jar app.jar
+
+# Expose the port that the application listens on
 EXPOSE 8761
 
-# Specify the command to run your application
+# Run the application with required environment variables
 CMD ["java", "-jar", "app.jar", "--custom.server-ip=${CUSTOM_SERVER_IP}"]
