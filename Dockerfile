@@ -8,7 +8,7 @@ WORKDIR /app
 COPY target/*.jar app.jar
 
 # Expose the port that the application listens to
-EXPOSE 8761
+EXPOSE 8762
 
 # Specify the command to run your application
 CMD ["java", "-jar", "app.jar", "--custom.server-ip=${CUSTOM_SERVER_IP}"]
